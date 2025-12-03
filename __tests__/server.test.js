@@ -1,5 +1,5 @@
 import request from "supertest"
-import app from "../app"
+import {app} from "../app"
 
 describe("Server", () => {
     it("should respond to GET / with 200", async () => {
@@ -16,7 +16,7 @@ describe("Server", () => {
         it("should respond with 500 for server error", async () => {
             const res = await request(app).get("/error")
             expect(res.statusCode).toBe(500)
-            expect(res.text).toContain("Serverfel.")
+            expect(res.text).toContain("Serverfel: Test error")
         })
 })
 

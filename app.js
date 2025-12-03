@@ -26,7 +26,7 @@ app.use(express.static("public"))
 app.use("/", indexRouter)
 
 app.use((req, res, next) => {
-    res.status(404).send("Sidan kunde inte hittas.")
+    res.status(404).send("Page not found :(")
 })
 
 app.use((err, req, res, next) => {
