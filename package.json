@@ -1,0 +1,27 @@
+{
+  "name": "wsp1-boilerplate",
+  "version": "1.0.0",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon -e js,html,njk,json,css start.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "start": "node start.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "morgan": "^1.10.1",
+    "mysql2": "^3.12.0",
+    "nunjucks": "^3.2.4"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.4"
+  }
+}

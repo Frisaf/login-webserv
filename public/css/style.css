@@ -1,0 +1,24 @@
+body {
+  font-family: sans-serif;
+  font-size: 1.2rem;
+}
+
+.wrapper {
+  width: min(100% - 3rem, var(--container-max, 60ch));
+  margin-inline: auto;
+}
+
+.region {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.header-flex {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    h1 {
+        margin-top: 0;
+    }
+}
