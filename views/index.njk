@@ -3,14 +3,20 @@
 {% block content %}
 {% include "components/header.njk" %}
 <main class="wrapper">
-    <p>Repot innehåller det mesta du behöver för att komma igång samt en grundläggande mappstruktur. Inkluderat är de
-        startskript du behöver för att köra servern:</p>
-    <ul>
-        <li>npm run dev</li>
-        <li>npm test</li>
-        <li>npm start</li>
-    </ul>
-    <p> Servern har även en grundläggande felhantering och loggar eventuella fel till konsollen med morgan.</p>
+    {% for post in posts %}
+        <article>
+            <header>
+                <h2>{{ post.name }}</h2>
+            </header>
+            <p>{{ post.content }}</p>
+            <footer>
+                <p>Posted on {{ post.created_at }}</p>
+            </footer>
+        </article>
+    {% else %}
+        <h2>No posts available</h2>
+    {% endfor%}
+
     <p><a href="/login">Login</a></p>
 </main>
 {% include "components/footer.njk" %}

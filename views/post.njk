@@ -1,0 +1,15 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<main class="wrapper">
+    {% for content in post %}
+        <h2>{{ content.title }}</h2>
+        <p>{{ content.content }}</p>
+        <footer>
+            <p>Posted by <strong>{{ content.name }}</strong> at {{ content.created_at }}</p>
+        </footer>
+    {% endfor %}
+</main>
+
+{% endblock %}
