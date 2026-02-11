@@ -1,13 +1,13 @@
 import express from "express"
 import pool from "../config/database.js"
-import { param, validationResult } from "express-validator"
+import { body, param, validationResult } from "express-validator"
 
 const router = express.Router()
 
 router.get("/", async (req, res, next) => {
     try {
         const [rows] = await pool.query(`
-            SELECT post.id, post.content, post.created_at, user.name
+            SELECT post.id, post.title, post.content, post.created_at, user.name
             FROM post
             JOIN user ON post.user_id = user.id
             ORDER BY post.created_at DESC
@@ -43,6 +43,27 @@ router.get("/posts/:id", param("id").isInt().withMessage("Post ID has to be an i
 
         res.render("post.njk", {post: rows})
         // res.json(rows)
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.post("/posts", body("content").trim().escape(), async (req, res, next) => {
+    try {
+        const errors = validationResult(req)
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()})
+        }
+
+        const content = req.body.content
+        const [result] = await pool.query(
+            `INSERT INTO post (content, user_id)
+            VALUES (?, ?)`,
+            [content, req.user.id]
+        )
+
+        res.status(201).json({postId: result.insertId})
     } catch (err) {
         next(err)
     }

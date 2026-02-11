@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import session from "express-session"
 
 import indexRouter from './routes/index.js'
+import usersRouter from "./routes/users.js"
 
 const app = express()
 const port = 3000 || process.env.PORT
@@ -19,23 +20,25 @@ app.set('view engine', 'njk')
 app.set('views', './views')
 
 app.use(morgan('dev'))
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 app.use(express.static("public"))
 
 app.use(session({
-  secret: "super-secret",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     sameSite: true,
     secure: false,
-    maxAge: 1000 * 60 * 60* 24
+    maxAge: 1000 * 60 * 60* 24,
+    httpOnly: true
   }
 }))
 
 app.use("/", indexRouter)
+app.use("/users", usersRouter)
 
 app.use((req, res, next) => {
     res.status(404).send("Page not found :(")
