@@ -73,21 +73,21 @@ router.get('/error', (req, res) => {
     throw new Error('Test error')
 })
 
-router.get("/login", (req, res) => {
-    res.render("login.njk", {
-        title: "Log in"
-    })
-})
+// router.get("/login", (req, res) => {
+//     res.render("login.njk", {
+//         title: "Log in"
+//     })
+// })
 
-router.post("/login", (req, res) => {
-    const username = req.body.username
-    const password = req.body.password
+// router.post("/login", (req, res) => {
+//     const username = req.body.username
+//     const password = req.body.password
     
-    if (username === "admin" && password === "123") {
-        req.session.login = "true"
-    }
+//     if (username === "admin" && password === "123") {
+//         req.session.login = "true"
+//     }
 
-    res.json({username, password, session: req.session.login})
-})
+//     res.json({username, password, session: req.session.login})
+// })
 
 export default router
