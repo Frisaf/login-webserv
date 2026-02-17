@@ -46,11 +46,28 @@ router.post("/login", body("username").trim().notEmpty().withMessage("Please pro
         req.session.username = user.name
         req.session.authenticated = true
 
-        return res.json({message: "User logged in!", user})
+        return res.redirect("./profile")
     } catch (err) {
         console.error(err)
         res.status(500).json({error: "Whoops, something went wrong :("})
     }
+})
+
+router.get("/profile", async (req, res) => {
+    if (!req.session.authenticated) {
+        return res.status(410).json({error: "You need to be logged in to view this page."})
+    }
+
+    const [rows] = await pool.query(
+        `SELECT post.id, post.title, post.content, post.created_at, user.name
+        FROM post
+        JOIN user ON post.user_id = user.id
+        WHERE post.user_id = ?
+        ORDER BY post.created_at DESC`,
+        [req.session.userId]
+    )
+
+    res.render("profile.njk", {data: req.session, posts: rows})
 })
 
 export default router

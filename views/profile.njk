@@ -1,12 +1,15 @@
 {% extends "layout.njk" %}
-
 {% block content %}
 {% include "components/header.njk" %}
+
 <main class="wrapper">
+    <h2>Welcome back, {{ data.username }}!</h2>
+    <h3>Your posts</h3>
+
     {% for post in posts %}
         <article>
             <header>
-                <h2>{{ post.title }}</h2>
+                <h4>{{ post.title }}</h4>
             </header>
             <p>{{ post.content }}</p>
             <footer>
@@ -15,9 +18,7 @@
         </article>
     {% else %}
         <h2>No posts available</h2>
-    {% endfor %}
-
-    <p><a href="/users/login">Login</a></p>
+    {% endfor%}
 </main>
-{% include "components/footer.njk" %}
+
 {% endblock %}
