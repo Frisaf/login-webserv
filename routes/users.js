@@ -55,7 +55,8 @@ router.post("/login", body("username").trim().notEmpty().withMessage("Please pro
 
 router.get("/profile", async (req, res) => {
     if (!req.session.authenticated) {
-        return res.status(410).json({error: "You need to be logged in to view this page."})
+        res.render("not_logged_in.njk", {title: "Profile"})
+        return
     }
 
     const [rows] = await pool.query(
@@ -67,7 +68,7 @@ router.get("/profile", async (req, res) => {
         [req.session.userId]
     )
 
-    res.render("profile.njk", {data: req.session, posts: rows})
+    res.render("profile.njk", {data: req.session, posts: rows, title: "Profile", logged_in: true})
 })
 
 export default router

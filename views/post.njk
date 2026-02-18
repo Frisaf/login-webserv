@@ -3,13 +3,13 @@
 {% block content %}
 
 <main class="wrapper">
-    {% for content in post %}
-        <h2>{{ content.title }}</h2>
-        <p>{{ content.content }}</p>
+    <article>
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
         <footer>
-            <p>Posted by <strong>{{ content.name }}</strong> at {{ content.created_at }}</p>
+            <p>Posted by <strong>{{ post.name }}</strong> at {{ post.created_at }}</p>
         </footer>
-    {% endfor %}
+    </article>
 </main>
 
 {% endblock %}

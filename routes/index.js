@@ -12,7 +12,7 @@ router.get("/", async (req, res, next) => {
             JOIN user ON post.user_id = user.id
             ORDER BY post.created_at DESC
             `)
-        res.render("index.njk", {title: "Micro Blogg", posts: rows})
+        res.render("index.njk", {title: "Litter", posts: rows, logged_in: req.session.authenticated})
     } catch (err) {
         next(err)
     }
@@ -31,17 +31,19 @@ router.get("/posts/:id", param("id").isInt().withMessage("Post ID has to be an i
         `
             SELECT post.id, post.title, post.content, post.created_at, user.name
             FROM post
-            JOIN user ON post.user_id = user_id
+            JOIN user ON post.user_id = user.id
             WHERE post.id = ?
         `,
         [postId]
         )
 
+        console.log(rows)
+
         if (rows.length === 0) {
             throw new Error("Post not found :(")
         }
 
-        res.render("post.njk", {post: rows})
+        res.render("post.njk", {post: rows[0], logged_in: req.session.authenticated})
         // res.json(rows)
     } catch (err) {
         next(err)

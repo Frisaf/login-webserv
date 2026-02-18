@@ -1,0 +1,10 @@
+{% extends "layout.njk" %}
+{% block content %}
+{% include "components/header.njk" %}
+
+<main class="wrapper">
+    <p>You need to be logged in to view this page.</p>
+    <a href="/users/login">Log in</a>
+</main>
+
+{% endblock %}
