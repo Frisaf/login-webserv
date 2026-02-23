@@ -3,9 +3,20 @@
 {% block content %}
 {% include "components/header.njk" %}
 <main class="wrapper">
+    {% if logged_in == true %}
+        <p><em>Create new post</em></p>
+        <form action="/posts" method="POST" class="form">
+            <div class="createPost">
+                <input type="text" id="title" name="title" placeholder="An Exciting Title">
+                <textarea type="text" id="content" name="content" placeholder="What's on your mind?"></textarea>
+            </div>
+            <button type="submit">Post</button>
+        </form>
+    {% endif %}
+
     {% for post in posts %}
         <a href="/posts/{{ post.id }}" class="postLink">
-            <article>
+            <article class="post">
                 <header>
                     <h2>{{ post.title }}</h2>
                 </header>

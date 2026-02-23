@@ -29,7 +29,7 @@ router.get("/posts/:id", param("id").isInt().withMessage("Post ID has to be an i
         const postId = req.params.id
         const [rows] = await pool.query(
         `
-            SELECT post.id, post.title, post.content, post.created_at, user.name
+            SELECT post.id, post.title, post.content, post.created_at, user.name, post.user_id
             FROM post
             JOIN user ON post.user_id = user.id
             WHERE post.id = ?
@@ -50,7 +50,39 @@ router.get("/posts/:id", param("id").isInt().withMessage("Post ID has to be an i
     }
 })
 
-router.post("/posts", body("content").trim().escape(), async (req, res, next) => {
+router.get("/posts/:id/delete", param("id").isInt().withMessage("Post ID has to be an integer"), async (req, res, next) => {
+    try {
+        const errors = validationResult(req)
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array })
+        }
+
+        const postId = req.params.id
+        const [rows] = await pool.query(
+            `
+                SELECT post.user_id FROM post
+                JOIN user ON post.user_id = user.id
+            `
+        )
+
+        console.log(rows)
+        
+        await pool.query(
+            `
+                DELETE FROM post WHERE id = ?
+            `,
+            [postId]
+        )
+
+        res.redirect("/")
+
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.post("/posts", body("content").trim().notEmpty().escape(), async (req, res, next) => {
     try {
         const errors = validationResult(req)
 
@@ -58,14 +90,15 @@ router.post("/posts", body("content").trim().escape(), async (req, res, next) =>
             return res.status(400).json({errors: errors.array()})
         }
 
+        const title = req.body.title
         const content = req.body.content
         const [result] = await pool.query(
-            `INSERT INTO post (content, user_id)
-            VALUES (?, ?)`,
-            [content, req.user.id]
+            `INSERT INTO post (title, content, user_id)
+            VALUES (?, ?, ?)`,
+            [title, content, req.session.userId]
         )
 
-        res.status(201).json({postId: result.insertId})
+        res.redirect("/")
     } catch (err) {
         next(err)
     }
@@ -74,22 +107,5 @@ router.post("/posts", body("content").trim().escape(), async (req, res, next) =>
 router.get('/error', (req, res) => {
     throw new Error('Test error')
 })
-
-// router.get("/login", (req, res) => {
-//     res.render("login.njk", {
-//         title: "Log in"
-//     })
-// })
-
-// router.post("/login", (req, res) => {
-//     const username = req.body.username
-//     const password = req.body.password
-    
-//     if (username === "admin" && password === "123") {
-//         req.session.login = "true"
-//     }
-
-//     res.json({username, password, session: req.session.login})
-// })
 
 export default router

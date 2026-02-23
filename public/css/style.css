@@ -39,3 +39,22 @@ nav {
   text-decoration: none;
   color: inherit;
 }
+
+.post {
+  border: 2px solid grey;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px
+}
+
+.createPost {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  input, textarea {
+    padding: 10px;
+    font-family: inherit;
+  }
+}

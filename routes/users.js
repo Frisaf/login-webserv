@@ -53,6 +53,18 @@ router.post("/login", body("username").trim().notEmpty().withMessage("Please pro
     }
 })
 
+router.get("/logout", (req, res) => {
+    if (!req.session.authenticated) {
+        res.render ("not_logged_in.njk", {title: "Log out page"})
+        return
+    }
+
+    else {
+        req.session.authenticated = false
+        res.redirect("/")
+    }
+})
+
 router.get("/profile", async (req, res) => {
     if (!req.session.authenticated) {
         res.render("not_logged_in.njk", {title: "Profile"})

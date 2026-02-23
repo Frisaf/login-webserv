@@ -10,6 +10,7 @@
             <p>Posted by <strong>{{ post.name }}</strong> at {{ post.created_at }}</p>
         </footer>
     </article>
+    <p><a href="/posts/{{ post.id }}/delete">Delete post</a></p>
 </main>
 
 {% endblock %}
