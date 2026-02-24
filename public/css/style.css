@@ -58,3 +58,13 @@ nav {
     font-family: inherit;
   }
 }
+
+.wrongPassword {
+  background-color: red;
+  margin-bottom: 3rem;
+  padding: 1rem;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 10px;
+  display: flex;
+}

@@ -37,13 +37,11 @@ router.get("/posts/:id", param("id").isInt().withMessage("Post ID has to be an i
         [postId]
         )
 
-        console.log(rows)
-
         if (rows.length === 0) {
             throw new Error("Post not found :(")
         }
 
-        res.render("post.njk", {post: rows[0], logged_in: req.session.authenticated})
+        res.render("post.njk", {post: rows[0], logged_in: req.session.authenticated, userId: req.session.userId})
         // res.json(rows)
     } catch (err) {
         next(err)
@@ -58,6 +56,10 @@ router.get("/posts/:id/delete", param("id").isInt().withMessage("Post ID has to 
             return res.status(400).json({ errors: errors.array })
         }
 
+        if (!req.session.authenticated) {
+            return res.redirect("/")
+        }
+
         const postId = req.params.id
         const [rows] = await pool.query(
             `
@@ -66,7 +68,9 @@ router.get("/posts/:id/delete", param("id").isInt().withMessage("Post ID has to 
             `
         )
 
-        console.log(rows)
+        if (req.session.userId != rows[0].user_id) {
+            return res.redirect("/")
+        }
         
         await pool.query(
             `
@@ -87,7 +91,7 @@ router.post("/posts", body("content").trim().notEmpty().escape(), async (req, re
         const errors = validationResult(req)
 
         if (!errors.isEmpty()) {
-            return res.status(400).json({errors: errors.array()})
+            return res.render("error.njk")
         }
 
         const title = req.body.title

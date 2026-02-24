@@ -4,13 +4,15 @@
 
 <main class="wrapper">
     <article>
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.content }}</p>
+        <h2>{{ post.title | safe }}</h2>
+        <p>{{ post.content | safe }}</p>
         <footer>
             <p>Posted by <strong>{{ post.name }}</strong> at {{ post.created_at }}</p>
         </footer>
     </article>
-    <p><a href="/posts/{{ post.id }}/delete">Delete post</a></p>
+    {% if logged_in and post.user_id == userId%}
+        <p><a href="/posts/{{ post.id }}/delete">Delete post</a></p>
+    {% endif %}
 </main>
 
 {% endblock %}

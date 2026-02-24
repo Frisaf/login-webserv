@@ -30,16 +30,15 @@ router.post("/login", body("username").trim().notEmpty().withMessage("Please pro
     try {
         const [rows] = await pool.query("select * FROM user WHERE name = ?", [username])
         const user = rows[0]
-        console.log(user)
 
         if (!user) {
-            return res.status(401).json({error: "Wrong username or password"})
+            return res.render("login.njk", {e_message: "Wrong username or password", title: "Log in"})
         }
 
         const isMatch = await bcrypt.compare(password, user.password)
 
         if (!isMatch) {
-            return res.status(401).json({error: "Wrong username or password"})
+            return res.render("login.njk", {e_message: "Wrong username or password", title: "Log in"})
         }
 
         req.session.userId = user.id
