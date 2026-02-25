@@ -64,6 +64,51 @@ router.get("/logout", (req, res) => {
     }
 })
 
+router.get("/signup", (req, res) => {
+    res.render("signup.njk", {title: "Sign up"})
+})
+
+router.post("/signup", body("username").trim().notEmpty().withMessage("Please provide a username"), body("password").notEmpty().withMessage("Please provide a password"), async (req, res) => {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()})
+    }
+
+    const username = req.body.username
+    const password = await bcrypt.hash(req.body.password, 10)
+    const email = req.body.email
+
+    try {
+        const [user_check] = await pool.query("SELECT * FROM user WHERE name = ?", [username])
+        const [email_check] = await pool.query("SELECT * from user WHERE email = ?", [email])
+
+        if (user_check[0]) {
+            return res.render("signup.njk", {e_message: "Username already taken", title: "Sign up"})
+        } else if (email_check[0]) {
+            return res.render("signup.njk", {e_message: "Email already in use by somebody else", title: "Sign up"})
+        }
+
+        await pool.query(`
+            INSERT INTO user (name, password, email)
+            VALUES (?, ?, ?);
+            `, [username, password, email]
+        )
+
+        const [rows] = await pool.query("SELECT * FROM user WHERE name = ?", [username])
+        const user = rows[0]
+
+        req.session.userId = user.id
+        req.session.username = user.name
+        req.session.authenticated = true
+
+        return res.redirect("./profile")
+    } catch (err) {
+        console.log(err)
+        res.render("error.njk")
+    }
+})
+
 router.get("/profile", async (req, res) => {
     if (!req.session.authenticated) {
         res.render("not_logged_in.njk", {title: "Profile"})

@@ -10,7 +10,11 @@
             <span>{{ e_message }}</span>
         </div>
     {% endif %}
-    <form action="/users/login" method="post" class="form login">
+    <form action="/users/signup" method="post" class="form login">
+        <div class="formControl">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+        </div>
         <div class="formControl">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" autocomplete="off">
@@ -20,7 +24,7 @@
             <label for="password">Password</label>
         <input type="password" id="password" name="password">
         </div>
-        <button type="submit">Log in</button>
+        <button type="submit">Sign up</button>
     </form>
 </main>
 
