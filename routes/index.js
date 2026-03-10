@@ -42,7 +42,6 @@ router.get("/posts/:id", param("id").isInt().withMessage("Post ID has to be an i
         }
 
         res.render("post.njk", {post: rows[0], logged_in: req.session.authenticated, userId: req.session.userId})
-        // res.json(rows)
     } catch (err) {
         next(err)
     }
@@ -96,12 +95,17 @@ router.post("/posts", body("content").trim().notEmpty().escape(), async (req, re
 
         const title = req.body.title
         const content = req.body.content
-        const [result] = await pool.query(
-            `INSERT INTO post (title, content, user_id)
-            VALUES (?, ?, ?)`,
-            [title, content, req.session.userId]
-        )
+        const lineBreaks = (content.match(/\n/g)||[]).length
 
+        if (lineBreaks <= 5) {
+            await pool.query(
+                `INSERT INTO post (title, content, user_id)
+                VALUES (?, ?, ?)`,
+                [title, content, req.session.userId]
+            )
+        } else {
+            res.send('<script>alert("Too many newlines. Calm down buddy...")</script>')
+        }
         res.redirect("/")
     } catch (err) {
         next(err)

@@ -3,6 +3,8 @@ import express from "express"
 import nunjucks from "nunjucks"
 import morgan from 'morgan'
 import session from "express-session"
+import express_flash_notification from "express-flash-notification"
+import cookieParser from "cookie-parser"
 
 import indexRouter from './routes/index.js'
 import usersRouter from "./routes/users.js"
@@ -36,6 +38,9 @@ app.use(session({
     httpOnly: true
   }
 }))
+
+app.use(cookieParser())
+app.use(express_flash_notification(app))
 
 app.use("/", indexRouter)
 app.use("/users", usersRouter)

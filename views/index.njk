@@ -3,6 +3,10 @@
 {% block content %}
 {% include "components/header.njk" %}
 <main class="wrapper">
+    {% if tooManyNewlines == true %}
+        {{ flash }}
+    {% endif %}
+
     {% if logged_in == true %}
         <p><em>Create new post</em></p>
         <form action="/posts" method="POST" class="form">
