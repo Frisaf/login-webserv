@@ -40,7 +40,14 @@ app.use(session({
 }))
 
 app.use(cookieParser())
-app.use(express_flash_notification(app))
+app.use(express_flash_notification(app, {
+  sessionName: 'flash',
+  utilityName: 'flash',
+  localsName: 'flash',
+  viewName: 'components/flash',
+  beforeSingleRender: function(item, callback){ callback(null, item) },
+  afterAllRender: function(htmlFragments, callback){ callback(null, htmlFragments.join('\n')) }
+}))
 
 app.use("/", indexRouter)
 app.use("/users", usersRouter)

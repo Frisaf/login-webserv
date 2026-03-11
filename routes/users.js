@@ -22,7 +22,7 @@ router.post("/login", body("username").trim().notEmpty().withMessage("Please pro
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()})
+        return req.flash("error", errors.array()[0].msg, "/users/login")
     }
 
     const {username, password} = req.body
@@ -32,13 +32,13 @@ router.post("/login", body("username").trim().notEmpty().withMessage("Please pro
         const user = rows[0]
 
         if (!user) {
-            return res.render("login.njk", {e_message: "Wrong username or password", title: "Log in"})
+            return req.flash("error", "Wrong username or password", "/users/login")
         }
 
         const isMatch = await bcrypt.compare(password, user.password)
 
         if (!isMatch) {
-            return res.render("login.njk", {e_message: "Wrong username or password", title: "Log in"})
+            return req.flash("error", "Wrong username or password", "/users/login")
         }
 
         req.session.userId = user.id
@@ -125,6 +125,16 @@ router.get("/profile", async (req, res) => {
     )
 
     res.render("profile.njk", {data: req.session, posts: rows, title: "Profile", logged_in: true})
+})
+
+router.get("/account", async (req, res) => {
+    if (!req.session.authenticated) {
+        return res.render("not_logged_in.njk", {title: "Account"})
+    }
+
+    const [rows] = await pool.query(`SELECT * FROM user WHERE user.id = ?`, [req.session.userId])
+
+    res.render("account.njk", {info: rows[0]})
 })
 
 export default router

@@ -4,9 +4,7 @@
 
 {% include "components/header.njk" %}
 <main class="wrapper">
-    {% if e_message %}
-        {% include "components/alert.njk" %}
-    {% endif %}
+    {{ flash | safe }}
     <form action="/users/login" method="post" class="form login">
         <div class="formControl">
             <label for="username">Username</label>

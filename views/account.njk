@@ -1,0 +1,12 @@
+{% extends "layout.njk" %}
+{% block content %}
+{% include "components/header.njk" %}
+
+<main class="wrapper">
+    <h2>Account</h2>
+    <h3>Current details</h3>
+    <p><strong>Username:</strong> {{ info.name }}</p>
+    <p><strong>Email:</strong> {{ info.email }}</p>
+</main>
+
+{% endblock %}

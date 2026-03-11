@@ -103,10 +103,10 @@ router.post("/posts", body("content").trim().notEmpty().escape(), async (req, re
                 VALUES (?, ?, ?)`,
                 [title, content, req.session.userId]
             )
+            res.redirect("/")
         } else {
-            res.send('<script>alert("Too many newlines. Calm down buddy...")</script>')
+            return req.flash("error", "Woah that's a few too many newlines. Calm down buddy!", "/")
         }
-        res.redirect("/")
     } catch (err) {
         next(err)
     }

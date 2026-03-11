@@ -3,9 +3,7 @@
 {% block content %}
 {% include "components/header.njk" %}
 <main class="wrapper">
-    {% if tooManyNewlines == true %}
-        {{ flash }}
-    {% endif %}
+    {{ flash | safe }}
 
     {% if logged_in == true %}
         <p><em>Create new post</em></p>
